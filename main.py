@@ -316,3 +316,8 @@ class AutoConnector(object):
         """
 
         return False
+
+if __name__ == "__main__":
+
+    a = AutoConnector( "./chrome_driver", "Chrome" )
+    a.tryToConnect()
