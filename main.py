@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+
 from selenium import webdriver
 from pyvirtualdisplay import Display
 import subprocess
+import os
 
 from nmcli_wrapper import *
 
@@ -10,7 +13,7 @@ class AutoConnector(object):
         """
         """
 
-        Display( visible=0, size(1024,768) ).start()
+        Display( visible=0, size=(1024,768) ).start()
 
         if driver_type == "HtmlUnit":
             self.driver = webdriver.HtmlUnit( driver_path )
@@ -41,7 +44,7 @@ class AutoConnector(object):
                 "7SPOT":                         self.connectViaSevenEleven,
                 "LAWSON_Free_Wi-Fi":             self.connectViaLawson,
                 "Famima_Wi-Fi":                  self.connectViaFamima,
-                "AEON MALL":                     self.connectViaAEON,
+                "AEON":                          self.connectViaAEON,
                 "atPARCO":                       self.connectViaParco,
                 "DONKI_Free_Wi-Fi":              self.connectViaDONKI,
                 "JR-WEST Free Wi-Fi":            self.connectViaJRWest,
@@ -66,12 +69,15 @@ class AutoConnector(object):
 
     def isConnected( self ):
         """
-        TBD
         """
+        proc = subprocess.run( "ping -w 3 -c 1", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE )
 
-        return True
+        if proc.returncode == 0:
+            return True
+        else:
+            return False
 
-    def tryToConnect( self, threshold_signal=60, num_trial=3 ):
+    def tryToConnect( self, threshold_signal=40, num_trial=3, is_debug=True ):
         """
         """
         APs = getWifiAPs()
@@ -81,14 +87,26 @@ class AutoConnector(object):
                 APs_valid.append( AP )
 
         for AP in APs_valid:
-            if AP["SSID"] in self.APlist:
+            if is_debug:
+                print( " AP[SSID] : " + AP["SSID"] )
+            if AP["SSID"] in self.APlist.keys():
+                if is_debug:
+                    print( "trying to connect : " + AP["SSID"] )
                 for i in range( num_trial ):
                     connectAP( AP["SSID"] )
                     if self.APlist[ AP["SSID"] ]() and self.isConnected():
                         return True
+                if is_debug:
+                    print( "failed to connect : " + AP["SSID"] )
                 continue
 
         return False
+
+    def connectViaSkylark( self ):
+        """
+        """
+        ap_name = ".Wi2_Free_at_"
+        url = "https://service.wi2.ne.jp/wi2auth/skylark/index.html"
 
     def connectViaStarbucks( self ):
         """
@@ -319,5 +337,8 @@ class AutoConnector(object):
 
 if __name__ == "__main__":
 
-    a = AutoConnector( "./chrome_driver", "Chrome" )
-    a.tryToConnect()
+    a = AutoConnector( os.path.dirname( os.path.abspath(__file__) ) + "/" + "chromedriver", "Chrome" )
+    if a.tryToConnect():
+        print("Successfully connected")
+    else:
+        print("Connection failed")
