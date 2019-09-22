@@ -110,6 +110,7 @@ class AutoConnector(object):
 
     def connectViaStarbucks( self ):
         """
+        connection function for starbucks coffee
         """
         url_loginpage = "https://service.wi2.ne.jp/wi2auth/at_STARBUCKS_Wi2/index.html" 
         button_next_page_id = "button_next_page"
@@ -129,6 +130,7 @@ class AutoConnector(object):
 
     def connectViaTullys( self ):
         """
+        connection function for tullys coffee
         """
         url_loginpage = "https://service.wi2.ne.jp/wi2net/TermsLogin/2/?SSID=f9e049afde477ade57f6f717842623b0"
         button_1st_id = "oc_button_to_kiyaku"
@@ -158,6 +160,8 @@ class AutoConnector(object):
         TBD
         """
 
+        url = "http://w.mdj.jp/wflogin"
+
         return False
 
     def connectViaPRONTO( self ):
@@ -171,6 +175,51 @@ class AutoConnector(object):
         """
         TBD
         """
+        #url = "http://webapp-ap.7spot.jp/?tmst=1565774997"
+        url = "http://webapp-ap.7spot.jp"
+        email = "hoge@fuga.com"
+        password = "hogefuga"
+
+        try:
+
+            self.driver.get( url )
+            self.driver.find_element_by_id( "check_terms" ).click()
+            self.driver.find_element_by_id( "check_terms_internet" ).click()
+            self.driver.find_element_by_name( "register" ).click()
+
+            # 7SPOT login
+            ##
+            self.driver.find_element_by_id( "member-type-1" ).click()
+            self.driver.find_element_by_id( "email" ).send_keys( email )
+            self.driver.find_element_by_id( "password" ).send_keys( password )
+            ## ?
+            
+            # 7id login
+            ##
+            self.driver.find_element_by_id( "member-type-2" ).click()
+            self.driver.find_element_by_id( "email" ).send_keys( email )
+            self.driver.find_element_by_id( "password" ).send_keys( password )
+            ## ?
+
+            # new account of 7SPOT
+            ##
+            self.driver.find_element_by_name( "register" ).click()
+            ##
+            self.driver.find_element_by_name( "email" ).send_keys( email )
+            self.driver.find_element_by_id( "sex-1" ).click() 
+            self.driver.find_element_by_id( "sex-2" ).click() 
+            self.driver.find_element_by_id( "birthday" ).send_keys( "1970" )
+            self.driver.find_element_by_name( "password" ).send_keys( password )
+            self.driver.find_element_by_name( "password_confirm" ).send_keys( password )
+            self.driver.find_element_by_class_name( "btn01" ).click()
+            ##
+            self.driver.find_element_by_id( "btnSubmit" ).click()
+            ## これで狩り回委員として利用できる
+
+
+        except:
+
+            return False
 
         return False
 
@@ -185,8 +234,48 @@ class AutoConnector(object):
         """
         TBD
         """
+        url = "http://app.family-wifi.jp/"
+        email = "hoge@fuga.com"
+        password = "hogefuga"
 
-        return False
+        try:
+
+            self.driver.get( url )
+            #
+            self.driver.find_element_by_id( "agreement" ).click()
+            self.driver.find_element_by_id( "goTop" ).click()
+
+            #
+            self.driver.find_element_by_id( "acccordion_box_582" ).click()
+
+            #
+            ## login
+            self.driver.find_element_by_name( "data[Authentication][email]" ).send_keys( email )
+            self.driver.find_element_by_name( "data[Authentication][password]" ).send_keys( password )
+            self.driver.find_element_by_id( "login_btn" ).click()
+            ## ?
+
+            ## register
+            self.driver.find_element_by_class_name( "btn_img01" )[2].click()
+            ##
+            self.driver.find_element_by_id( "agreement" ).click()
+            self.driver.find_element_by_id( "goRegister" ).click()
+            ##
+            self.driver.find_element_by_name( "data[Member][email]" ).send_keys( email )
+            self.driver.find_element_by_name( "data[Member][email_confirm_local]" ).send_keys( email.split( "@" )[0] )
+            self.driver.find_element_by_name( "data[Member][email_confirm_domain]" ).send_keys( email.split( "@" )[0] )
+            self.driver.find_element_by_name( "data[Member][password]" ).send_keys( password )
+            self.driver.find_element_by_name( "data[Member][password_confirm]" ).send_keys( password )
+            self.driver.find_element_by_id( "MemberSex1" ).click()
+            self.driver.find_elements_by_class_name( "btn_img01" )[1].click()
+            ##
+            self.driver.find_elements_by_id( "btnSubmit" ).click()
+            ## ?
+
+
+        except:
+
+            return False
 
     def connectViaAEON( self ):
         """
