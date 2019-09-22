@@ -54,7 +54,3 @@ def connectAP( SSID ):
     proc = subprocess.run( "nmcli dev wifi connect " + SSID, shell=True, stdout = subprocess.PIPE, stderr = subprocess.PIPE )
 
     return True
-
-def connectAP( SSID ):
-    """
-    """
